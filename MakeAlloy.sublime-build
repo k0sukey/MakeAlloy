@@ -1,0 +1,4 @@
+{
+	"target": "make_alloy",
+	"working_dir":"$ProjectDir"
+}
