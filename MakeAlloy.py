@@ -1,8 +1,9 @@
-import sublime, sublime_plugin, subprocess
+import os, sublime, sublime_plugin, subprocess
 
 class MakeAlloyCommand(sublime_plugin.WindowCommand):
 	settings = sublime.load_settings("MakeAlloy.sublime-settings")
-	alloy = settings.get('alloy')
+	alloy = os.environ["ALLOY_PATH"] = settings.get('alloy')
+	os.environ["ALLOY_NODE_PATH"] = settings.get('node')
 	panel = ["run iphone", "run android", "run mobileweb", "compile", "clean", "generate view", "generate controller", "generate widget", "generate jmk", "generate migration", "generate model"]
 
 	def run(self, *args, **kwargs):

@@ -1,3 +1,4 @@
 {
-	"alloy": "/path/to/alloy"
+	"alloy": "/path/to/alloy",
+	"node": "/path/to/node"
 }
