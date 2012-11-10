@@ -7,6 +7,7 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
     settings = sublime.load_settings("MakeAlloy.sublime-settings")
     alloy = os.environ["ALLOY_PATH"] = str(settings.get('alloy'))
     os.environ["ALLOY_NODE_PATH"] = str(settings.get('node'))
+    os.environ["PATH"] = os.environ["PATH"] + ":/usr/local/bin"
     panel = ["run iphone", "run android", "run mobileweb", "compile", "clean", "generate view", "generate controller", "generate widget", "generate jmk", "generate migration", "generate model"]
 
     def run(self, *args, **kwargs):
