@@ -3,6 +3,7 @@ import sublime
 import sublime_plugin
 import subprocess
 
+
 class MakeAlloyCommand(sublime_plugin.WindowCommand):
     settings = sublime.load_settings("MakeAlloy.sublime-settings")
     alloy = os.environ["ALLOY_PATH"] = str(settings.get('alloy'))
@@ -32,7 +33,7 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
                 self.generate = "alloy " + self.panel[index]
                 self.window.show_input_panel(self.alloy, '', self._input_panel_callback, None, None)
             else:
-                cat = subprocess.Popen("cat " + self.root + "/tiapp.xml",
+                cat = subprocess.Popen("cat '" + self.root + "/tiapp.xml'",
                                        stdout=subprocess.PIPE,
                                        shell=True)
 
