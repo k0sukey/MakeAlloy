@@ -24,10 +24,11 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
                 subprocess.call("rm -rf '" + self.root + "/build/android/'; mkdir -p '" + self.root + "/build/android'",
                                 shell=True)
                 sublime.status_message("Deleted build/iphone/*, build/android/*")
+            elif (self.panel[index] == "generate jmk"):
+                self.window.run_command("exec", {"cmd": [self.alloy, "-n", "-o", self.root + "/app", "generate", "jmk"]})
             elif (self.panel[index] == "generate view"
                     or self.panel[index] == "generate controller"
                     or self.panel[index] == "generate widget"
-                    or self.panel[index] == "generate jmk"
                     or self.panel[index] == "generate migration"
                     or self.panel[index] == "generate model"):
                 self.generate = "alloy " + self.panel[index]
@@ -56,4 +57,4 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
 
     def _input_panel_callback(self, text):
         cmd = self.generate.split(' ')
-        self.window.run_command("exec", {"cmd": [self.alloy, "-n -o", self.root + "/app", "generate", cmd[2], text]})
+        self.window.run_command("exec", {"cmd": [self.alloy, "-n", "-o", self.root + "/app", "generate", cmd[2], text]})
