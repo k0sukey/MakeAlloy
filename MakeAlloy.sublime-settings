@@ -1,4 +1,5 @@
 {
-	"alloy": "/path/to/alloy",
-	"node": "/path/to/node"
+	"path": "/usr/local/lib/node_modules",
+	"androidsdk": "/path/to/android-sdk",
+	"loglevel": "debug"
 }

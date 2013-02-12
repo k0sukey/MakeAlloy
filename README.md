@@ -9,6 +9,10 @@ MakeAlloy is Sublime Text 2 plugin. cmd + b = build alloy!
 5. Go to menu Tools > Build System > select MakeAlloy
 6. cmd + b > select platform
 
+## ChangeLog
+* Dealing with Alloy 1.0.0 (Build for Titanium CLI command)
+* MakeAlloy.sublime-settings
+
 ## Inspierd
 
 [MakeTi](https://github.com/appersonlabs/MakeTi).
