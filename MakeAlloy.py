@@ -6,7 +6,7 @@ import subprocess
 
 class MakeAlloyCommand(sublime_plugin.WindowCommand):
     settings = sublime.load_settings("MakeAlloy.sublime-settings")
-    os.environ["PATH"] = os.environ["PATH"] + str(settings.get('path'))
+    os.environ["PATH"] = str(settings.get('path'))
     panel = ["run iphone simulator", "run ipad simulator", "run android emulator", "transfer android device", "compile", "clean", "generate view", "generate controller", "generate widget", "generate jmk", "generate migration", "generate model"]
 
     def run(self, *args, **kwargs):
@@ -48,7 +48,7 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
                 if (self.panel[index] != "compile"):
                     options = self.panel[index].split(' ')
                     if (options[1] == "iphone" or options[1] == "ipad"):
-                        self.window.run_command("exec", {"cmd": ["titanium", "build", "--no-colors", "-s", sdk.strip(), "-p", "ios", "-T", options[2], "-d", self.root, "--log-level", str(self.settings.get('loglevel'))]})
+                        self.window.run_command("exec", {"cmd": ["titanium", "build", "--no-colors", "-s", sdk.strip(), "-p", "ios", "-T", options[2], "-F", options[1], "-d", self.root, "--log-level", str(self.settings.get('loglevel'))]})
                     else:
                         self.window.run_command("exec", {"cmd": ["titanium", "build", "--no-colors", "-s", sdk.strip(), "-p", "android", "-T", options[2], "-A", str(self.settings.get('androidsdk')), "-d", self.root, "--log-level", str(self.settings.get('loglevel'))]})
 
