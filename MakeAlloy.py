@@ -36,7 +36,7 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
                 self.panel[index] == "generate controller" or\
                 self.panel[index] == "generate widget" or\
                 self.panel[index] == "generate migration" or\
-                    self.panel[index] == "generate model":
+                self.panel[index] == "generate model":
                 self.generate = "alloy " + self.panel[index]
                 self.window.show_input_panel(self.generate, "", self.input_panel_callback, None, None)
             # Running, Compile
