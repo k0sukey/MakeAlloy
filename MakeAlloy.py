@@ -6,11 +6,10 @@ import subprocess
 
 class MakeAlloyCommand(sublime_plugin.WindowCommand):
     settings = sublime.load_settings("MakeAlloy.sublime-settings")
-    os.environ["PATH"] = str(settings.get('path'))
+    os.environ["PATH"] = settings.get('path')
     panel = ["run iphone simulator", "run ipad simulator", "run android emulator", "transfer android device", "compile", "clean", "generate view", "generate controller", "generate widget", "generate jmk", "generate migration", "generate model"]
 
     def run(self, *args, **kwargs):
-        # print args, kwargs
         self.root = self.window.folders()[0]
         self.window.show_quick_panel(self.panel, self._quick_panel_callback)
 
@@ -42,15 +41,16 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
                                        stdout=subprocess.PIPE,
                                        shell=True)
                 sdk, err = sed.communicate()
+                sdk = sdk.decode("utf-8").strip()
 
-                self.window.run_command("exec", {"cmd": ["alloy", "-n", "-t", sdk.strip(), "compile", self.root]})
+                self.window.run_command("exec", {"cmd": ["alloy", "-n", "-t", sdk, "compile", self.root]})
 
                 if (self.panel[index] != "compile"):
                     options = self.panel[index].split(' ')
                     if (options[1] == "iphone" or options[1] == "ipad"):
-                        self.window.run_command("exec", {"cmd": ["titanium", "build", "--no-colors", "-s", sdk.strip(), "-p", "ios", "-T", options[2], "-F", options[1], "-d", self.root, "--log-level", str(self.settings.get('loglevel'))]})
+                        self.window.run_command("exec", {"cmd": ["titanium", "build", "--no-colors", "-s", sdk, "-p", "ios", "-T", options[2], "-F", options[1], "-d", self.root, "--log-level", self.settings.get('loglevel')]})
                     else:
-                        self.window.run_command("exec", {"cmd": ["titanium", "build", "--no-colors", "-s", sdk.strip(), "-p", "android", "-T", options[2], "-A", str(self.settings.get('androidsdk')), "-d", self.root, "--log-level", str(self.settings.get('loglevel'))]})
+                        self.window.run_command("exec", {"cmd": ["titanium", "build", "--no-colors", "-s", sdk, "-p", "android", "-T", options[2], "-A", self.settings.get('androidsdk'), "-d", self.root, "--log-level", self.settings.get('loglevel')]})
 
     def _input_panel_callback(self, text):
         cmd = self.generate.split(' ')
