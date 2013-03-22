@@ -1,0 +1,3 @@
+[
+	{ "keys": ["super+b"], "command": "make_alloy", "path":$ProjectDir }
+]

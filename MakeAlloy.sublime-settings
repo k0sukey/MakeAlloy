@@ -1,5 +1,7 @@
 {
 	"path": "/bin:/usr/bin:/usr/local/bin:/usr/local/lib/node_modules:$HOME/.nvm/v0.8.1/bin:$HOME/.nvm/v0.8.1/lib/node_modules",
-	"androidsdk": "~/dev/android-sdk-macosx",
-	"loglevel": "debug"
-}
+	"androidsdk": "/path/to/android-sdk-macosx",
+	"loglevel": "debug",
+	"provisioning": "",
+	"developer": ""
+}}

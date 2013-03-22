@@ -10,8 +10,11 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
     settings = sublime.load_settings("MakeAlloy.sublime-settings")
     os.environ["PATH"] = settings.get("path")
     panel = [
-        "run iphone simulator", "run ipad simulator", "run android emulator", "transfer android device", "compile", "clean", "generate view",
-        "generate controller", "generate widget", "generate jmk", "generate migration", "generate model"]
+        "run iphone simulator", "build iphone device", "run ipad simulator", "build ipad device",
+        "run android emulator", "transfer android device",
+        "compile", "clean", "generate view", "generate controller", "generate widget",
+        "generate jmk", "generate migration", "generate model"
+    ]
 
     def run(self, *args, **kwargs):
         self.root = self.window.folders()[0]
@@ -58,12 +61,21 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
                     target = options[1]
                     # iOS
                     if platform == "iphone" or platform == "ipad":
-                        self.execmd(["titanium", "--no-colors", "build", "-s", sdk, "-p", "ios",
-                                    "-T", target, "-d", self.root, "--log-level", self.settings.get("loglevel")])
+                        # Slimulator
+                        if target == "simulator":
+                            self.execmd(["titanium", "--no-colors", "build", "-s", sdk, "-p", "ios",
+                                        "-T", target, "-d", self.root, "--log-level", self.settings.get("loglevel")])
+                        # Device
+                        else:
+                            self.execmd(["titanium", "--no-colors", "build", "-s", sdk, "-p", "ios",
+                                        "-V", self.settings.get("developer"),
+                                        "-P", self.settings.get("provisioning"),
+                                        "-T", target, "-d", self.root, "--log-level", self.settings.get("loglevel")])
                     # Android
                     else:
-                        self.execmd(["titanium", "build", "--no-colors", "-s", sdk, "-p", "android", "-T", target, "-A",
-                                    self.settings.get("androidsdk"), "-d", self.root, "--log-level", self.settings.get("loglevel")])
+                        self.execmd(["titanium", "build", "--no-colors", "-s", sdk, "-p", "android",
+                                    "-T", target, "-A", self.settings.get("androidsdk"),
+                                    "-d", self.root, "--log-level", self.settings.get("loglevel")])
         else:
             return True
 

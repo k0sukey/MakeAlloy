@@ -9,7 +9,19 @@ MakeAlloy is Sublime Text 2 plugin. cmd + b = build alloy!
 5. Go to menu Tools > Build System > select MakeAlloy
 6. cmd + b > select platform
 
+## iOS device build setting
+1. Prefereces > Package Settings > MakeAlloy > Settings - User
+2. Your provisioning profile uuid and iOS Developer user name
+
+```
+{
+	"provisioning": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+	"developer": "Kosuke Isobe"
+}
+```
+
 ## ChangeLog
+* Added iOS device build
 * Dealing with Alloy 1.0.0 (Build for Titanium CLI command)
 * MakeAlloy.sublime-settings
 
