@@ -20,6 +20,22 @@ MakeAlloy is Sublime Text 2 plugin. cmd + b = build alloy!
 }
 ```
 
+## iOS device transfer setting
+1. Required [ideviceinstaller](http://cgit.sukimashita.com/ideviceinstaller.git/) ```$ brew install ideviceinstaller```
+2. Prefereces > Package Settings > MakeAlloy > Settings - User
+3. Your device uuid
+
+```
+{
+	"device": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+}
+```
+
+### iOS device transfer usage
+1. cmd + b
+2. build iphone(or ipad) device
+3. transfer iphone(or ipad) device
+
 ## ChangeLog
 * Added iOS device build
 * Dealing with Alloy 1.0.0 (Build for Titanium CLI command)

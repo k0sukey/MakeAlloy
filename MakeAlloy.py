@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import json
 import os
 import sublime
 import sublime_plugin
@@ -26,11 +27,15 @@ sublime.set_timeout(load_settings, 1500)
 class MakeAlloyCommand(sublime_plugin.WindowCommand):
     global settings
     panel = [
-        "run iphone simulator", "build iphone device", "run ipad simulator", "build ipad device",
+        "run iphone simulator", "build iphone device", "transfer iphone device",
+        "run ipad simulator", "build ipad device", "transfer ipad device",
         "run android emulator", "transfer android device",
-        "compile", "clean", "generate view", "generate controller", "generate widget",
+        "compile", "clean",
+        "generate view", "generate controller", "generate widget",
         "generate jmk", "generate migration", "generate model"
     ]
+    provisioning = []
+    developer = []
 
     def run(self, *args, **kwargs):
         self.root = self.window.folders()[0]
@@ -67,31 +72,44 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
                 sdk, err = sed.communicate()
                 sdk = sdk.decode("utf-8").strip()
 
-                # Pre compile
-                self.execmd(["alloy", "-n", "-t", sdk, "compile", self.root])
-
+                # Compile
+                if self.panel[index] == "compile":
+                    self.execmd(["alloy", "-n", "-t", sdk, "compile", self.root])
                 # Running
-                if not self.panel[index] == "compile":
-                    options = (self.panel[index].split(" "))[1:3]
-                    platform = options[0]
-                    target = options[1]
+                else:
+                    options = self.panel[index].split(" ")
+                    deploy = options[0]
+                    platform = options[1]
+                    target = options[2]
                     # iOS
                     if platform == "iphone" or platform == "ipad":
-                        # Slimulator
+                        # Simulator
                         if target == "simulator":
                             self.execmd(["titanium", "--no-colors", "build", "-s", sdk, "-p", "ios",
-                                        "-T", target, "-d", self.root, "--log-level", self.settings.get("loglevel")])
+                                        "-T", target, "-Y", platform, "-d", self.root, "--log-level", settings.get("loglevel")])
                         # Device
                         else:
-                            self.execmd(["titanium", "--no-colors", "build", "-s", sdk, "-p", "ios",
-                                        "-V", self.settings.get("developer"),
-                                        "-P", self.settings.get("provisioning"),
-                                        "-T", target, "-d", self.root, "--log-level", self.settings.get("loglevel")])
+                            # Build
+                            if deploy == "build":
+                                self.execmd(["titanium", "--no-colors", "build", "-s", sdk, "-p", "ios",
+                                            "-V", settings.get("developer"),
+                                            "-P", settings.get("provisioning"),
+                                            "-T", target, "-F", platform, "-d", self.root, "--log-level", settings.get("loglevel")])
+                            # Transfer
+                            else:
+                                cat = subprocess.Popen("cat '" + self.root + "/tiapp.xml'", stdout=subprocess.PIPE, shell=True)
+                                grep = subprocess.Popen("grep '<name>'", stdin=cat.stdout, stdout=subprocess.PIPE, shell=True)
+                                sed = subprocess.Popen("sed -e 's/<\/*name>//g'", stdin=grep.stdout, stdout=subprocess.PIPE, shell=True)
+                                appname, err = sed.communicate()
+                                appname = appname.decode("utf-8").strip()
+
+                                self.execmd(["ideviceinstaller", "-U", settings.get("device"),
+                                            "-i", self.root + "/build/iphone/build/Debug-iphoneos/" + appname + ".ipa"])
                     # Android
                     else:
                         self.execmd(["titanium", "build", "--no-colors", "-s", sdk, "-p", "android",
-                                    "-T", target, "-A", self.settings.get("androidsdk"),
-                                    "-d", self.root, "--log-level", self.settings.get("loglevel")])
+                                    "-T", target, "-A", settings.get("androidsdk"),
+                                    "-d", self.root, "--log-level", settings.get("loglevel")])
         else:
             return True
 

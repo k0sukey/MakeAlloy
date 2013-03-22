@@ -3,5 +3,6 @@
 	"androidsdk": "/path/to/android-sdk-macosx",
 	"loglevel": "debug",
 	"provisioning": "",
-	"developer": ""
+	"developer": "",
+	"device": ""
 }}
