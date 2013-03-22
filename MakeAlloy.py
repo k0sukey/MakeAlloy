@@ -5,10 +5,24 @@ import sublime
 import sublime_plugin
 import subprocess
 
+settings = {}
+
+
+# Load Settings
+def load_settings():
+    settings = sublime.load_settings("MakeAlloy.sublime-settings")
+    # PATH normalization
+    os_path = os.environ["PATH"].split(":")
+    settings_path = settings.get("path").split(":")
+    path = os_path + settings_path
+    path = sorted(set(path), key=path.index)
+    os.environ["PATH"] = ":".join(path)
+
+# Lazy load
+sublime.set_timeout(load_settings, 1500)
+
 
 class MakeAlloyCommand(sublime_plugin.WindowCommand):
-    settings = sublime.load_settings("MakeAlloy.sublime-settings")
-    os.environ["PATH"] = settings.get("path")
     panel = [
         "run iphone simulator", "build iphone device", "run ipad simulator", "build ipad device",
         "run android emulator", "transfer android device",
@@ -39,7 +53,7 @@ class MakeAlloyCommand(sublime_plugin.WindowCommand):
                 self.panel[index] == "generate controller" or\
                 self.panel[index] == "generate widget" or\
                 self.panel[index] == "generate migration" or\
-                self.panel[index] == "generate model":
+                    self.panel[index] == "generate model":
                 self.generate = "alloy " + self.panel[index]
                 self.window.show_input_panel(self.generate, "", self.input_panel_callback, None, None)
             # Running, Compile
