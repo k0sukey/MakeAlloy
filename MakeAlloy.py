@@ -10,6 +10,7 @@ settings = {}
 
 # Load Settings
 def load_settings():
+    global settings
     settings = sublime.load_settings("MakeAlloy.sublime-settings")
     # PATH normalization
     os_path = os.environ["PATH"].split(":")
@@ -23,6 +24,7 @@ sublime.set_timeout(load_settings, 1500)
 
 
 class MakeAlloyCommand(sublime_plugin.WindowCommand):
+    global settings
     panel = [
         "run iphone simulator", "build iphone device", "run ipad simulator", "build ipad device",
         "run android emulator", "transfer android device",
